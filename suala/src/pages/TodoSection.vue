@@ -1,11 +1,20 @@
 <template>
-  <q-list>
-      <!--
-        Rendering a <label> tag (notice tag="label")
-        so QCheckboxes will respond to clicks on QItems to
-        change Toggle state.
-      -->
-
+  <q-page>
+    <div class="row q-pa-sm bg-primary">
+      <q-input
+      @keyup.enter="addTask"
+      class="col"
+      bg-color="white"  
+      v-model="newTask" 
+      placeholder="Add Task" 
+      square
+      dense>
+      <template v-slot:append>
+          <q-btn @click="addTask" round dense flat icon="add" />
+        </template>
+      </q-input>
+    </div>
+    <q-list>
       <q-item 
       v-for="(list, index) in lists" 
       :key="list.title" 
@@ -27,6 +36,17 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <div v-if="!lists.length" class="no-tasks absolute-center">
+      <q-icon
+      name="check"
+      size="102px"
+      color="primary"
+       />
+      <div class="text-h5 text-primary text-center">
+        No tasks
+      </div>
+    </div>
+  </q-page>
 </template>
 
 <script>
@@ -35,19 +55,20 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   data(){
   return {
+    newTask: '',
     lists: [
-      {
-        title: "Clean the Car",
-        completed: false
-      },
-      {
-        title: "Code",
-        completed: false
-      },
-      {
-        title: "Gym",
-        completed: false
-      }
+      // {
+      //   title: "Clean the Car",
+      //   completed: false
+      // },
+      // {
+      //   title: "Code",
+      //   completed: false
+      // },
+      // {
+      //   title: "Gym",
+      //   completed: false
+      // }
     ]
   }
 },
@@ -63,6 +84,13 @@ methods: {
         return this.lists.splice(index,1),
         this.$q.notify('ToDo Deleted')
       })
+  },
+  addTask() {
+    this.lists.push({
+      title: this.newTask,
+      completed: false
+    })
+    this.newTask = ''
   }
 }
 })
@@ -73,5 +101,8 @@ methods: {
     text-decoration: line-through;
     color: #bbb;
   }
+}
+.no-tasks{
+  opacity: .5;
 }
 </style>
